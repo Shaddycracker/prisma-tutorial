@@ -1,52 +1,26 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors"
+import { config } from "dotenv";
 
 export const prisma = new PrismaClient()
+config()
 const app = express()
+app.use(express.json())
 const port = 8080
 
-app.use(cors())
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}))
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({ "name": "shadab ali" })
 })
+import Auth from "./routes/normal_auth.route"
 
-app.get('/user', (req: Request, res: Response) => {
-    res.status(200).json({
-        id: 23,
-        name: "Dummy",
-        email: "dummy@example.com",
-        google_id: null,
-        created_At: new Date(),
-        updated_At: null
-    });
-});
+app.use('/user', Auth)
 
-
-app.get('/api/create-user', async (req: Request, res: Response) => {
-
-    try {
-
-
-        const user = await prisma.user.create({
-            data: {
-                name: "Shadab Ali",
-                email: "shadab@gmail.com",
-            }
-        });
-        res.status(200).json({
-            success: true,
-            user: user
-        })
-    } catch (err) {
-        console.log("error Message", err)
-        res.status(401).json({
-            success: false,
-            user: null
-        })
-    }
-})
 
 app.listen(port, () => {
     console.log(`App Running on ${port}`)
