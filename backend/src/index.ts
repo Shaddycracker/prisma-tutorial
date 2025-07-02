@@ -7,7 +7,7 @@ export const prisma = new PrismaClient()
 config()
 const app = express()
 app.use(express.json())
-const port = 8080
+const port = process.env.PORT || 8080
 
 app.use(cors({
     origin: "http://localhost:5173",
