@@ -43,7 +43,7 @@ const SignupController = async (req: Request, res: Response) => {
         res.cookie('access_token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: process.env.NODE_ENV==='production'? 'none':'lax',
             maxAge: 15 * 60 * 1000 // 15 min
         });
         res.cookie('refresh_token', refreshToken, {
